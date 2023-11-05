@@ -94,4 +94,23 @@ public class NotificationEntity {
                 notification.getDeletedAt()
         );
     }
+
+    public Notification toDomain() {
+        return Notification.of(
+                NotificationId.of(this.id),
+                this.type,
+                this.status,
+                this.sentAt,
+                this.senderType,
+                this.senderUserId,
+                Destination.of(this.destination),
+                this.receiverType,
+                this.receiverId,
+                this.title,
+                this.contents,
+                this.createdAt,
+                this.modifiedAt,
+                this.deletedAt
+        );
+    }
 }
