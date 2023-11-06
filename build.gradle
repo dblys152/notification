@@ -64,6 +64,8 @@ configure(springBootProjects) {
 	dependencies {
 		implementation 'org.springframework.boot:spring-boot-starter-validation'
 		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'org.springframework.boot:spring-boot-starter-mail'
+		implementation 'net.nurigo:sdk:4.2.7'
 		implementation 'org.slf4j:slf4j-api:2.0.7'
 
 		testImplementation "org.springframework.boot:spring-boot-starter-test"
