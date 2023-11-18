@@ -11,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,11 +54,29 @@ class NotificationRepositoryTest extends SupportNotificationFixture {
     }
 
     @Test
+    void save_and_saveAll() {
+        NotificationEntity savedEntity = repository.save(notificationEntity);
+
+        List<NotificationEntity> actual = repository.saveAll(List.of(savedEntity));
+
+        assertThat(actual).isNotEmpty();
+    }
+
+    @Test
     void findById() {
         NotificationEntity savedEntity = repository.save(notificationEntity);
 
         Optional<NotificationEntity> actual = repository.findById(savedEntity.getId());
 
         assertThat(actual).isPresent();
+    }
+
+    @Test
+    void findAllByStatusAndSentAtLessThanEqual() {
+        repository.save(notificationEntity);
+
+        List<NotificationEntity> actual = repository.findAllByStatusAndSentAtLessThanEqual(NotificationStatus.RESERVED, LocalDateTime.now());
+
+        assertThat(actual).isNotEmpty();
     }
 }
