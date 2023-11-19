@@ -6,3 +6,6 @@ spring:
     name: notification
   profiles:
     active: dev
+
+test-to-mail: ${TEST_TO_MAIL}
+test-to-mobile: ${TEST_TO_MOBILE}

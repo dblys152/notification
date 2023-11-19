@@ -45,8 +45,6 @@ spring:
 aws-mail:
   from: ${AWS_MAIL_FROM}
 
-test-to-mail: dblys152@gmail.com
-
 cool-sms:
   key: ${COOL_SMS_KEY}
   secret: ${COOL_SMS_SECRET}
