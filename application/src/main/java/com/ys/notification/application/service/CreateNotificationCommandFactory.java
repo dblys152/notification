@@ -1,10 +1,10 @@
 package com.ys.notification.application.service;
 
 import com.ys.notification.application.port.in.ReserveNotificationRequest;
-import com.ys.notification.domain.CreateNotificationCommand;
-import com.ys.notification.domain.Destination;
-import com.ys.notification.infrastructure.exception.BadRequestException;
-import com.ys.notification.infrastructure.utils.CommandFactory;
+import com.ys.notification.domain.command.CreateNotificationCommand;
+import com.ys.notification.domain.entity.Destination;
+import com.ys.shared.exception.BadRequestException;
+import com.ys.shared.utils.CommandFactory;
 import org.springframework.stereotype.Component;
 
 @Component

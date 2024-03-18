@@ -1,6 +1,6 @@
 package com.ys.notification.adapter.out.persistence;
 
-import com.ys.notification.domain.NotificationStatus;
+import com.ys.notification.domain.entity.NotificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

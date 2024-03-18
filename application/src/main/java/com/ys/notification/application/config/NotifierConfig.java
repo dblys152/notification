@@ -1,8 +1,8 @@
 package com.ys.notification.application.config;
 
-import com.ys.notification.notifier.CoolSmsNotifier;
-import com.ys.notification.notifier.DefaultNotifierFinder;
-import com.ys.notification.notifier.EmailNotifier;
+import com.ys.notification.domain.command.CoolSmsNotifier;
+import com.ys.notification.domain.command.DefaultNotifierFinder;
+import com.ys.notification.domain.command.EmailNotifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

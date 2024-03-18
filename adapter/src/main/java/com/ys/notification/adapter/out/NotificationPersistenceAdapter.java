@@ -4,9 +4,9 @@ import com.ys.notification.adapter.out.persistence.NotificationEntity;
 import com.ys.notification.adapter.out.persistence.NotificationRepository;
 import com.ys.notification.application.port.out.LoadNotificationPort;
 import com.ys.notification.application.port.out.RecordNotificationPort;
-import com.ys.notification.domain.Notification;
-import com.ys.notification.domain.NotificationStatus;
-import com.ys.notification.domain.Notifications;
+import com.ys.notification.domain.entity.Notification;
+import com.ys.notification.domain.entity.NotificationStatus;
+import com.ys.notification.domain.entity.Notifications;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

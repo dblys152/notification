@@ -1,8 +1,8 @@
 package com.ys.notification.adapter.in;
 
-import com.ys.notification.infrastructure.exception.BadRequestException;
-import com.ys.notification.infrastructure.exception.UnauthorizedException;
-import com.ys.notification.infrastructure.utils.ApiResponseModel;
+import com.ys.shared.exception.BadRequestException;
+import com.ys.shared.exception.UnauthorizedException;
+import com.ys.shared.utils.ApiResponseModel;
 import jakarta.servlet.ServletException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;

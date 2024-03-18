@@ -1,7 +1,7 @@
 package com.ys.notification.adapter.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ys.notification.infrastructure.utils.ApiResponseModel;
+import com.ys.shared.utils.ApiResponseModel;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

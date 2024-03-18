@@ -1,7 +1,7 @@
 package com.ys.notification.domain.fixture;
 
-import com.ys.notification.domain.Destination;
-import com.ys.notification.domain.NotificationId;
+import com.ys.notification.domain.entity.Destination;
+import com.ys.notification.domain.entity.NotificationId;
 
 import java.time.LocalDateTime;
 

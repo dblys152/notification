@@ -1,10 +1,8 @@
 package com.ys.notification.application.port.in;
 
-import com.ys.notification.domain.Destination;
-import com.ys.notification.domain.NotificationType;
-import com.ys.notification.domain.ReceiverType;
-import com.ys.notification.domain.SenderType;
-import jakarta.validation.Valid;
+import com.ys.notification.domain.entity.NotificationType;
+import com.ys.notification.domain.entity.ReceiverType;
+import com.ys.notification.domain.entity.SenderType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

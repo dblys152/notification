@@ -1,10 +1,6 @@
 rootProject.name = 'notification'
 
 include 'domain'
-include 'notifier'
 include 'application'
 include 'adapter'
-
-include 'scheduler'
-include 'infrastructure'
-
+include 'notifier'

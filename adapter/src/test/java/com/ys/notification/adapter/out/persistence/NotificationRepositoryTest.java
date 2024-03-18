@@ -2,7 +2,8 @@ package com.ys.notification.adapter.out.persistence;
 
 import com.ys.notification.adapter.config.DataJpaConfig;
 import com.ys.notification.adapter.out.persistence.fixture.SupportNotificationFixture;
-import com.ys.notification.domain.*;
+import com.ys.notification.domain.command.CreateNotificationCommand;
+import com.ys.notification.domain.entity.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @DataJpaTest

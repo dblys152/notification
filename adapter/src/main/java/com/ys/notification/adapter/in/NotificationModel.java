@@ -1,8 +1,6 @@
 package com.ys.notification.adapter.in;
 
-import com.ys.notification.domain.*;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
+import com.ys.notification.domain.entity.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

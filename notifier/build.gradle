@@ -1,8 +1,8 @@
 dependencies {
-    implementation project(':infrastructure')
-    implementation project(':domain')
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
+    implementation 'io.github.openfeign:feign-okhttp:12.5'
 }
 
-bootJar {
-    enabled(false)
+jar {
+    enabled(true)
 }
