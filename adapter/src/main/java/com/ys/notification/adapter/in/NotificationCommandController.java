@@ -40,7 +40,7 @@ public class NotificationCommandController {
                 ApiResponseModel.success(HttpStatus.CREATED.value(), NotificationModel.fromDomain(notification)));
     }
 
-    @PostMapping("/reserved/send")
+    @PostMapping("/reserved-sending")
     public ResponseEntity<ApiResponseModel<List<NotificationModel>>> sendAll() {
         Notifications notifications = sendReservedNotificationsUseCase.sendAll();
 
