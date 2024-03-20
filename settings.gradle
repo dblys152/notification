@@ -1,6 +1,9 @@
-rootProject.name = 'notification'
+rootProject.name = 'notification-service'
 
-include 'domain'
-include 'application'
-include 'adapter'
+include 'notification:domain'
+include 'notification:application'
+include 'notification:adapter'
 include 'notifier'
+include 'scheduler'
+include 'notification'
+

@@ -1,0 +1,11 @@
+logging:
+  level:
+    root: INFO
+
+spring:
+  cloud:
+    inetutils:
+      ignored-interfaces: eth1*
+      preferred-networks: 192.168
+
+base-host: http://localhost:8090

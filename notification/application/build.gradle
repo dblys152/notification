@@ -1,0 +1,7 @@
+dependencies {
+    implementation project(":notification:domain")
+}
+
+bootJar {
+    enabled(false)
+}

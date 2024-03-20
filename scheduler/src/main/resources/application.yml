@@ -1,0 +1,17 @@
+server:
+  port: 8092
+
+spring:
+  application:
+    name: scheduler
+  profiles:
+    active: dev
+
+api-key:
+  header: X-API-Key
+  value:
+    notification: ${NOTIFICATION_API_KEY}
+
+endpoint:
+  notifier-module:
+    notification: /api/notifications

@@ -1,7 +1,0 @@
-dependencies {
-    implementation project(':domain')
-}
-
-bootJar {
-    enabled(false)
-}
