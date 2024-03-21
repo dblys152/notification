@@ -1,4 +1,4 @@
-package com.ys.notification.adapter.in;
+package com.ys.notification.adapter.presentation;
 
 import com.ys.notification.domain.*;
 import lombok.AllArgsConstructor;
@@ -13,27 +13,29 @@ public class NotificationModel {
     NotificationType type;
     NotificationStatus status;
     LocalDateTime sentAt;
-    SenderType senderType;
-    String senderUserId;
     String destination;
-    ReceiverType receiverType;
-    String receiverId;
     String title;
     String contents;
+    SenderType senderType;
+    String senderUserId;
+    ReceiverType receiverType;
+    String receiverId;
 
     public static NotificationModel fromDomain(Notification notification) {
+        Sender sender = notification.getSender();
+        Receiver receiver = notification.getReceiver();
         return new NotificationModel(
                 notification.getId().get(),
                 notification.getType(),
                 notification.getStatus(),
                 notification.getSentAt(),
-                notification.getSenderType(),
-                notification.getSenderUserId(),
                 notification.getDestination().getValue(),
-                notification.getReceiverType(),
-                notification.getReceiverId(),
                 notification.getTitle(),
-                notification.getContents()
+                notification.getContents(),
+                sender.getSenderType(),
+                sender.getSenderUserId(),
+                receiver.getReceiverType(),
+                receiver.getReceiverId()
         );
     }
 }

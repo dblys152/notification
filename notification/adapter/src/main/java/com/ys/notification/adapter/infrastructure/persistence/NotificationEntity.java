@@ -1,4 +1,4 @@
-package com.ys.notification.adapter.out.persistence;
+package com.ys.notification.adapter.infrastructure.persistence;
 
 import com.ys.notification.domain.*;
 import jakarta.persistence.*;
@@ -10,7 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "NOTIFICATION_LIST")
+@Table(name = "NOTIFICATIONS")
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,9 +18,8 @@ import java.time.LocalDateTime;
 @ToString
 public class NotificationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "NOTIFICATION_ID", nullable = false)
-    private Long id;
+    private Long notificationId;
 
     @Column(name = "TYPE", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -33,25 +32,9 @@ public class NotificationEntity {
     @Column(name = "SENT_AT", nullable = false)
     private LocalDateTime sentAt;
 
-    @Column(name = "SENDER_TYPE", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SenderType senderType;
-
-    @Column(name = "SENDER_USER_ID")
-    @Size(min = 1, max = 39)
-    private String senderUserId;
-
     @Column(name = "DESTINATION", nullable = false)
     @Size(min = 1, max = 30)
     private String destination;
-
-    @Column(name = "RECEIVER_TYPE", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ReceiverType receiverType;
-
-    @Column(name = "RECEIVER_ID")
-    @Size(max = 39)
-    private String receiverId;
 
     @Column(name = "TITLE", nullable = false)
     @Size(min = 1, max = 200)
@@ -61,6 +44,22 @@ public class NotificationEntity {
     @Size(min = 1)
     private String contents;
 
+    @Column(name = "SENDER_TYPE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private SenderType senderType;
+
+    @Column(name = "SENDER_USER_ID")
+    @Size(min = 1, max = 39)
+    private String senderUserId;
+
+    @Column(name = "RECEIVER_TYPE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ReceiverType receiverType;
+
+    @Column(name = "RECEIVER_ID")
+    @Size(max = 39)
+    private String receiverId;
+
     @CreatedDate
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
@@ -69,44 +68,39 @@ public class NotificationEntity {
     @Column(name = "MODIFIED_AT", nullable = false)
     private LocalDateTime modifiedAt;
 
-    @Column(name = "DELETED_AT")
-    private LocalDateTime deletedAt;
-
     public static NotificationEntity fromDomain(Notification notification) {
+        Sender sender = notification.getSender();
+        Receiver receiver = notification.getReceiver();
         return new NotificationEntity(
                 notification.getId().get(),
                 notification.getType(),
                 notification.getStatus(),
                 notification.getSentAt(),
-                notification.getSenderType(),
-                notification.getSenderUserId(),
                 notification.getDestination().getValue(),
-                notification.getReceiverType(),
-                notification.getReceiverId(),
                 notification.getTitle(),
                 notification.getContents(),
+                sender.getSenderType(),
+                sender.getSenderUserId(),
+                receiver.getReceiverType(),
+                receiver.getReceiverId(),
                 notification.getCreatedAt(),
-                notification.getModifiedAt(),
-                notification.getDeletedAt()
+                notification.getModifiedAt()
         );
     }
 
     public Notification toDomain() {
         return Notification.of(
-                NotificationId.of(this.id),
+                NotificationId.of(this.notificationId),
                 this.type,
                 this.status,
                 this.sentAt,
-                this.senderType,
-                this.senderUserId,
-                Destination.of(this.destination),
-                this.receiverType,
-                this.receiverId,
+                Destination.of(this.type, this.destination),
                 this.title,
                 this.contents,
+                Sender.of(this.senderType, this.senderUserId),
+                Receiver.of(this.receiverType, this.receiverId),
                 this.createdAt,
-                this.modifiedAt,
-                this.deletedAt
+                this.modifiedAt
         );
     }
 }

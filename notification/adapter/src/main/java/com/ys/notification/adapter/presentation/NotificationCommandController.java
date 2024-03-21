@@ -1,8 +1,8 @@
-package com.ys.notification.adapter.in;
+package com.ys.notification.adapter.presentation;
 
-import com.ys.notification.application.port.in.ReserveNotificationRequest;
-import com.ys.notification.application.port.in.ReserveNotificationUseCase;
-import com.ys.notification.application.port.in.SendReservedNotificationsUseCase;
+import com.ys.notification.application.usecase.ChangeReservedToWaitingUseCase;
+import com.ys.notification.application.usecase.ReserveNotificationUseCase;
+import com.ys.notification.application.usecase.model.ReserveNotificationRequest;
 import com.ys.notification.domain.CreateNotificationCommand;
 import com.ys.notification.domain.Notification;
 import com.ys.notification.domain.Notifications;
@@ -28,7 +28,7 @@ import java.util.List;
 public class NotificationCommandController {
     private final CommandFactory<ReserveNotificationRequest, CreateNotificationCommand> createNotificationCommandCommandFactory;
     private final ReserveNotificationUseCase reserveNotificationUseCase;
-    private final SendReservedNotificationsUseCase sendReservedNotificationsUseCase;
+    private final ChangeReservedToWaitingUseCase changeReservedToWaitingUseCase;
 
     @PostMapping
     public ResponseEntity<ApiResponseModel<NotificationModel>> reserve(@RequestBody @Valid ReserveNotificationRequest request) {
@@ -40,9 +40,9 @@ public class NotificationCommandController {
                 ApiResponseModel.success(HttpStatus.CREATED.value(), NotificationModel.fromDomain(notification)));
     }
 
-    @PostMapping("/reserved-sending")
-    public ResponseEntity<ApiResponseModel<List<NotificationModel>>> sendReservedNotifications() {
-        Notifications notifications = sendReservedNotificationsUseCase.sendReservedNotifications();
+    @PostMapping("/reserved-waiting")
+    public ResponseEntity<ApiResponseModel<List<NotificationModel>>> changeReservedToWaitingUse() {
+        Notifications notifications = changeReservedToWaitingUseCase.changeReservedToWaiting();
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponseModel.success(HttpStatus.OK.value(), notifications.getItems().stream()

@@ -1,4 +1,4 @@
-package com.ys.notification.adapter.in;
+package com.ys.notification.adapter.presentation;
 
 import com.ys.shared.exception.BadRequestException;
 import com.ys.shared.exception.UnauthorizedException;

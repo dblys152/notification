@@ -1,7 +1,7 @@
-package com.ys.notification.adapter.out.persistence;
+package com.ys.notification.adapter.infrastructure.persistence;
 
 import com.ys.notification.adapter.config.DataJpaConfig;
-import com.ys.notification.adapter.out.persistence.fixture.SupportNotificationFixture;
+import com.ys.notification.adapter.infrastructure.persistence.fixture.SupportNotificationFixture;
 import com.ys.notification.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,33 +30,21 @@ class NotificationRepositoryTest extends SupportNotificationFixture {
     @BeforeEach
     void setUp() {
         Notification notification = Notification.create(new CreateNotificationCommand(
-                NotificationType.EMAIL, SENT_AT, SenderType.SYSTEM, SENDER_USER_ID, DESTINATION_EMAIL, ReceiverType.USER, RECEIVER_ID, TITLE, CONTENTS));
+                NotificationType.EMAIL, SENT_AT, DESTINATION_EMAIL, TITLE, CONTENTS, SENDER, RECEIVER));
         notificationEntity = NotificationEntity.fromDomain(notification);
     }
 
     @Test
-    void svae() {
+    void save() {
         NotificationEntity actual = repository.save(notificationEntity);
 
         assertThat(actual).isNotNull();
-        assertThat(actual.getId()).isNotNull();
+        assertThat(actual.getNotificationId()).isNotNull();
     }
 
     @Test
-    void svae_and_save() {
-        NotificationEntity savedEntity = repository.save(notificationEntity);
-
-        NotificationEntity actual = repository.save(savedEntity);
-
-        assertThat(actual).isNotNull();
-        assertThat(actual.getId()).isNotNull();
-    }
-
-    @Test
-    void save_and_saveAll() {
-        NotificationEntity savedEntity = repository.save(notificationEntity);
-
-        List<NotificationEntity> actual = repository.saveAll(List.of(savedEntity));
+    void saveAll() {
+        List<NotificationEntity> actual = repository.saveAll(List.of(notificationEntity));
 
         assertThat(actual).isNotEmpty();
     }
@@ -65,9 +53,18 @@ class NotificationRepositoryTest extends SupportNotificationFixture {
     void findById() {
         NotificationEntity savedEntity = repository.save(notificationEntity);
 
-        Optional<NotificationEntity> actual = repository.findById(savedEntity.getId());
+        Optional<NotificationEntity> actual = repository.findById(savedEntity.getNotificationId());
 
         assertThat(actual).isPresent();
+    }
+
+    @Test
+    void findAllById() {
+        NotificationEntity savedEntity = repository.save(notificationEntity);
+
+        List<NotificationEntity> actual = repository.findAllById(List.of(savedEntity.getNotificationId()));
+
+        assertThat(actual).isNotEmpty();
     }
 
     @Test

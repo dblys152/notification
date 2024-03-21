@@ -1,12 +1,8 @@
-package com.ys.notification.adapter.out;
+package com.ys.notification.adapter.infrastructure;
 
-import com.ys.notification.adapter.out.persistence.NotificationEntity;
-import com.ys.notification.adapter.out.persistence.NotificationRepository;
-import com.ys.notification.application.port.out.LoadNotificationPort;
-import com.ys.notification.application.port.out.RecordNotificationPort;
-import com.ys.notification.domain.Notification;
-import com.ys.notification.domain.NotificationStatus;
-import com.ys.notification.domain.Notifications;
+import com.ys.notification.adapter.infrastructure.persistence.NotificationEntity;
+import com.ys.notification.adapter.infrastructure.persistence.NotificationRepository;
+import com.ys.notification.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -25,9 +21,12 @@ public class NotificationPersistenceAdapter implements RecordNotificationPort, L
     }
 
     @Override
-    public void saveAll(Notifications notifications) {
-        repository.saveAll(notifications.getItems().stream()
+    public Notifications saveAll(Notifications notifications) {
+        List<NotificationEntity> entityList = repository.saveAll(notifications.getItems().stream()
                 .map(NotificationEntity::fromDomain)
+                .toList());
+        return Notifications.of(entityList.stream()
+                .map(NotificationEntity::toDomain)
                 .toList());
     }
 
@@ -36,6 +35,16 @@ public class NotificationPersistenceAdapter implements RecordNotificationPort, L
         List<NotificationEntity> entityList = repository.findAllByStatusAndSentAtLessThanEqual(status, now);
         return Notifications.of(entityList.stream()
                 .map(e -> e.toDomain())
+                .toList());
+    }
+
+    @Override
+    public Notifications findAllById(List<NotificationId> ids) {
+        List<NotificationEntity> entityList = repository.findAllById(ids.stream()
+                .map(notificationId -> notificationId.get())
+                .toList());
+        return Notifications.of(entityList.stream()
+                .map(NotificationEntity::toDomain)
                 .toList());
     }
 }

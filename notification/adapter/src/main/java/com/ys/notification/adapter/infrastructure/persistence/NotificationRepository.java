@@ -1,4 +1,4 @@
-package com.ys.notification.adapter.out.persistence;
+package com.ys.notification.adapter.infrastructure.persistence;
 
 import com.ys.notification.domain.NotificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
