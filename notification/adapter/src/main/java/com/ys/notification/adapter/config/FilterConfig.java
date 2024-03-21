@@ -11,14 +11,9 @@ public class FilterConfig {
     @Bean
     public FilterRegistrationBean<ApiKeyHeaderFilter> apiKeyFilter(ObjectMapper objectMapper) {
         FilterRegistrationBean<ApiKeyHeaderFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(apiKeyHeaderFilter(objectMapper));
+        registrationBean.setFilter(new ApiKeyHeaderFilter(objectMapper));
         registrationBean.setOrder(1);
         registrationBean.addUrlPatterns("/api/notifications/*");
         return registrationBean;
-    }
-
-    @Bean
-    public ApiKeyHeaderFilter apiKeyHeaderFilter(ObjectMapper objectMapper) {
-        return new ApiKeyHeaderFilter(objectMapper);
     }
 }

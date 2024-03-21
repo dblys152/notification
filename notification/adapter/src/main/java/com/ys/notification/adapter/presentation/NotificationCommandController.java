@@ -26,13 +26,13 @@ import java.util.List;
     consumes = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class NotificationCommandController {
-    private final CommandFactory<ReserveNotificationRequest, CreateNotificationCommand> createNotificationCommandCommandFactory;
+    private final CommandFactory<ReserveNotificationRequest, CreateNotificationCommand> createNotificationCommandFactory;
     private final ReserveNotificationUseCase reserveNotificationUseCase;
     private final ChangeReservedToWaitingUseCase changeReservedToWaitingUseCase;
 
     @PostMapping
     public ResponseEntity<ApiResponseModel<NotificationModel>> reserve(@RequestBody @Valid ReserveNotificationRequest request) {
-        CreateNotificationCommand command = createNotificationCommandCommandFactory.create(request);
+        CreateNotificationCommand command = createNotificationCommandFactory.create(request);
 
         Notification notification = reserveNotificationUseCase.reserve(command);
 
@@ -40,8 +40,8 @@ public class NotificationCommandController {
                 ApiResponseModel.success(HttpStatus.CREATED.value(), NotificationModel.fromDomain(notification)));
     }
 
-    @PostMapping("/reserved-waiting")
-    public ResponseEntity<ApiResponseModel<List<NotificationModel>>> changeReservedToWaitingUse() {
+    @PostMapping("/reserved-to-waiting")
+    public ResponseEntity<ApiResponseModel<List<NotificationModel>>> changeReservedToWaiting() {
         Notifications notifications = changeReservedToWaitingUseCase.changeReservedToWaiting();
 
         return ResponseEntity.status(HttpStatus.OK).body(
