@@ -4,54 +4,77 @@ import com.ys.notification.domain.fixture.SupportNotificationFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class NotificationTest extends SupportNotificationFixture {
-    private Notification notification;
+    private Notification reservedNotification;
+    private Notification waitingNotification;
+    private Notification failedNotification;
 
     @BeforeEach
     void setUp() {
-        notification = Notification.of(
-                NOTIFICATION_ID, NotificationType.EMAIL, NotificationStatus.RESERVED, SENT_AT, SenderType.SYSTEM, SENDER_USER_ID, DESTINATION_EMAIL, ReceiverType.USER, RECEIVER_ID, TITLE, CONTENTS, NOW, NOW, null);
+        reservedNotification = getNotificationByStatus(NOTIFICATION_ID, NotificationStatus.RESERVED);
+        waitingNotification = getNotificationByStatus(NOTIFICATION_ID, NotificationStatus.WAITING);
+        failedNotification = getNotificationByStatus(NOTIFICATION_ID, NotificationStatus.FAILED);
     }
 
     @Test
     void 알림을_생성한다() {
-        CreateNotificationCommand command = new CreateNotificationCommand(NotificationType.EMAIL, SENT_AT, SenderType.SYSTEM, SENDER_USER_ID, DESTINATION_EMAIL, ReceiverType.USER, RECEIVER_ID, TITLE, CONTENTS);
+        CreateNotificationCommand command = new CreateNotificationCommand(
+                NotificationType.EMAIL, SENT_AT, DESTINATION_EMAIL, TITLE, CONTENTS, SENDER, RECEIVER);
 
         Notification actual = Notification.create(command);
 
-        assertThat(actual).isNotNull();
-        assertThat(actual.getStatus()).isEqualTo(NotificationStatus.RESERVED);
+        assertAll(
+                () -> assertThat(actual).isNotNull(),
+                () -> assertThat(actual.getId()).isNotNull(),
+                () -> assertThat(actual.getStatus()).isEqualTo(NotificationStatus.RESERVED),
+                () -> assertThat(actual.getCreatedAt()).isNotNull(),
+                () -> assertThat(actual.getModifiedAt()).isNotNull()
+        );
     }
 
     @Test
-    void 알림_생성_시_목적지_검증에_실패하면_에러를_반환한다() {
-        CreateNotificationCommand command = new CreateNotificationCommand(NotificationType.COOL_SMS, SENT_AT, SenderType.SYSTEM, SENDER_USER_ID, DESTINATION_EMAIL, ReceiverType.USER, RECEIVER_ID, TITLE, CONTENTS);
+    void 대기중_상태로_변경한다() {
+        reservedNotification.toWaiting();
 
-        assertThatThrownBy(() -> Notification.create(command)).isInstanceOf(IllegalArgumentException.class);
+        assertThat(reservedNotification.getStatus()).isEqualTo(NotificationStatus.WAITING);
+        assertThat(reservedNotification.getModifiedAt()).isBefore(LocalDateTime.now());
     }
 
     @Test
-    void 알림_생성_시_목적지_검증에_실패하면_에러를_반환한다_2() {
-        Destination wrongDestination = Destination.of("test@mail");
-        CreateNotificationCommand command = new CreateNotificationCommand(NotificationType.EMAIL, SENT_AT, SenderType.SYSTEM, SENDER_USER_ID, wrongDestination, ReceiverType.USER, RECEIVER_ID, TITLE, CONTENTS);
-
-        assertThatThrownBy(() -> Notification.create(command)).isInstanceOf(IllegalArgumentException.class);
+    void 대기중_상태로_변경_시_예약된_상태가_아니면_에러를_반환한다() {
+        assertThatThrownBy(() -> waitingNotification.toWaiting()).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> failedNotification.toWaiting()).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
-    void 알림_상태를_변경한다() {
-        notification.changeStatus(NotificationStatus.SENT);
+    void 성공된_상태로_변경한다() {
+        waitingNotification.succeed();
 
-        assertThat(notification.getStatus()).isEqualTo(NotificationStatus.SENT);
+        assertThat(waitingNotification.getStatus()).isEqualTo(NotificationStatus.SUCCEEDED);
     }
 
     @Test
-    void 알림을_삭제한다() {
-        notification.delete();
+    void 성공된_상태로_변경_시_대기중_상태가_아니면_에러를_반환한다() {
+        assertThatThrownBy(() -> reservedNotification.succeed()).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> failedNotification.succeed()).isInstanceOf(IllegalStateException.class);
+    }
 
-        assertThat(notification.getDeletedAt()).isNotNull();
+    @Test
+    void 실패된_상태로_변경한다() {
+        waitingNotification.fail();
+
+        assertThat(waitingNotification.getStatus()).isEqualTo(NotificationStatus.FAILED);
+    }
+
+    @Test
+    void 실패된_상태로_변경_시_대기중_상태가_아니면_에러를_반환한다() {
+        assertThatThrownBy(() -> reservedNotification.fail()).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> failedNotification.fail()).isInstanceOf(IllegalStateException.class);
     }
 }

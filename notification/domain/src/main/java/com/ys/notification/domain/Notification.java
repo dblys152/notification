@@ -1,19 +1,20 @@
 package com.ys.notification.domain;
 
+import com.github.f4b6a3.tsid.TsidCreator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class Notification extends AbstractAggregateRoot<Notification> {
-    @NotNull @Valid
+public class Notification {
+    @Valid
+    @NotNull
     private NotificationId id;
 
     @NotNull
@@ -25,20 +26,9 @@ public class Notification extends AbstractAggregateRoot<Notification> {
     @NotNull
     private LocalDateTime sentAt;
 
+    @Valid
     @NotNull
-    private SenderType senderType;
-
-    @Size(min = 1, max = 39)
-    private String senderUserId;
-
-    @NotNull @Valid
     private Destination destination;
-
-    @NotNull
-    private ReceiverType receiverType;
-
-    @Size(max = 39)
-    private String receiverId;
 
     @NotBlank
     @Size(min = 1, max = 200)
@@ -48,58 +38,76 @@ public class Notification extends AbstractAggregateRoot<Notification> {
     @Size(min = 1)
     private String contents;
 
+    @Valid
+    @NotNull
+    private Sender sender;
+
+    @Valid
+    @NotNull
+    private Receiver receiver;
+
     @NotNull
     private LocalDateTime createdAt;
 
     @NotNull
     private LocalDateTime modifiedAt;
 
-    private LocalDateTime deletedAt;
-
     public static Notification of(
             NotificationId id,
             NotificationType type,
             NotificationStatus status,
             LocalDateTime sentAt,
-            SenderType senderType,
-            String senderUserId,
             Destination destination,
-            ReceiverType receiverType,
-            String receiverId,
             String title,
             String contents,
+            Sender sender,
+            Receiver receiver,
             LocalDateTime createdAt,
-            LocalDateTime modifiedAt,
-            LocalDateTime deletedAt
+            LocalDateTime modifiedAt
     ) {
         return new Notification(
-                id, type, status, sentAt, senderType, senderUserId, destination, receiverType, receiverId, title, contents, createdAt, modifiedAt, deletedAt);
+                id, type, status, sentAt, destination, title, contents, sender, receiver, createdAt, modifiedAt);
     }
 
     public static Notification create(CreateNotificationCommand command) {
-        command.getDestination().validate(command.getType());
+        NotificationId notificationId = NotificationId.of(TsidCreator.getTsid256().toLong());
         LocalDateTime now = LocalDateTime.now();
         return new Notification(
-                NotificationId.of(null),
+                notificationId,
                 command.getType(),
                 NotificationStatus.RESERVED,
                 command.getSentAt(),
-                command.getSenderType(),
-                command.getSenderUserId(),
                 command.getDestination(),
-                command.getReceiverType(),
-                command.getReceiverId(),
                 command.getTitle(),
                 command.getContents(),
-                now, now, null);
+                command.getSender(),
+                command.getReceiver(),
+                now, now);
     }
 
-    public void changeStatus(NotificationStatus status) {
+    private void changeStatus(NotificationStatus status) {
         this.status = status;
         this.modifiedAt = LocalDateTime.now();
     }
 
-    public void delete() {
-        this.deletedAt = LocalDateTime.now();
+    public void toWaiting() {
+        if (!this.status.isReserved()) {
+            throw new IllegalStateException("예약된 상태에서만 대기중 처리 할 수 있습니다.");
+        }
+        changeStatus(NotificationStatus.WAITING);
+    }
+
+    public void succeed() {
+        if (!this.status.isWaiting()) {
+            throw new IllegalStateException("대기중 상태에서만 성공 처리 할 수 있습니다.");
+        }
+        changeStatus(NotificationStatus.SUCCEEDED);
+    }
+
+    public void fail() {
+        if (!this.status.isWaiting()) {
+            throw new IllegalStateException("대기중 상태에서만 실패 처리 할 수 있습니다.");
+        }
+        changeStatus(NotificationStatus.FAILED);
     }
 }

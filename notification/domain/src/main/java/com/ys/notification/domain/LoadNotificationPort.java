@@ -1,10 +1,9 @@
-package com.ys.notification.application.port.out;
-
-import com.ys.notification.domain.NotificationStatus;
-import com.ys.notification.domain.Notifications;
+package com.ys.notification.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface LoadNotificationPort {
     Notifications findAllByStatusAndSentAtLessThanEqual(NotificationStatus status, LocalDateTime now);
+    Notifications findAllByIds(List<NotificationId> ids);
 }

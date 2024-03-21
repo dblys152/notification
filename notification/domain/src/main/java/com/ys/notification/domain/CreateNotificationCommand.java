@@ -5,10 +5,13 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class CreateNotificationCommand extends SelfValidating<CreateNotificationCommand> {
     @NotNull
@@ -17,20 +20,9 @@ public class CreateNotificationCommand extends SelfValidating<CreateNotification
     @NotNull
     private LocalDateTime sentAt;
 
+    @Valid
     @NotNull
-    private SenderType senderType;
-
-    @Size(min = 1, max = 39)
-    private String senderUserId;
-
-    @NotNull @Valid
     private Destination destination;
-
-    @NotNull
-    private ReceiverType receiverType;
-
-    @Size(max = 39)
-    private String receiverId;
 
     @NotBlank
     @Size(min = 1, max = 200)
@@ -40,26 +32,30 @@ public class CreateNotificationCommand extends SelfValidating<CreateNotification
     @Size(min = 1)
     private String contents;
 
+    @Valid
+    @NotNull
+    private Sender sender;
+
+    @Valid
+    @NotNull
+    private Receiver receiver;
+
     public CreateNotificationCommand(
             NotificationType type,
             LocalDateTime sentAt,
-            SenderType senderType,
-            String senderUserId,
             Destination destination,
-            ReceiverType receiverType,
-            String receiverId,
             String title,
-            String contents
+            String contents,
+            Sender sender,
+            Receiver receiver
     ) {
         this.type = type;
         this.sentAt = sentAt;
-        this.senderType = senderType;
-        this.senderUserId = senderUserId;
         this.destination = destination;
-        this.receiverType = receiverType;
-        this.receiverId = receiverId;
         this.title = title;
         this.contents = contents;
+        this.sender = sender;
+        this.receiver = receiver;
         validateSelf();
     }
 }

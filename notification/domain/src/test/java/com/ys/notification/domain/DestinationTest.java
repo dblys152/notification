@@ -11,10 +11,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class DestinationTest {
     @ParameterizedTest(name = "email : {0}")
     @MethodSource("getWrongEmails")
-    void 이메일_알림의_목적지_검증_시_이메일_형식이_맞지_않으면_에러를_반환한다(String wrongEmail) {
-        Destination destination = Destination.of(wrongEmail);
-
-        assertThatThrownBy(() -> destination.validate(NotificationType.EMAIL)).isInstanceOf(IllegalArgumentException.class);
+    void 이메일_목적지_생성_시_이메일_형식이_맞지_않으면_에러를_반환한다(String wrongEmail) {
+        assertThatThrownBy(() -> Destination.of(NotificationType.EMAIL, wrongEmail))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static Stream<Arguments> getWrongEmails() {
@@ -28,10 +27,9 @@ class DestinationTest {
 
     @ParameterizedTest(name = "mobile : {0}")
     @MethodSource("getWrongMobiles")
-    void SMS_알림의_목적지_검증_시_모바일_형식이_맞지_않으면_에러를_반환한다(String wrongMobile) {
-        Destination destination = Destination.of(wrongMobile);
-
-        assertThatThrownBy(() -> destination.validate(NotificationType.COOL_SMS)).isInstanceOf(IllegalArgumentException.class);
+    void SMS_목적지_생성_시_모바일_형식이_맞지_않으면_에러를_반환한다(String wrongMobile) {
+        assertThatThrownBy(() -> Destination.of(NotificationType.COOL_SMS, wrongMobile))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static Stream<Arguments> getWrongMobiles() {
