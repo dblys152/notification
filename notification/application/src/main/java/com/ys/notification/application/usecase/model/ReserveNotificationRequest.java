@@ -1,4 +1,4 @@
-package com.ys.notification.application.port.in;
+package com.ys.notification.application.usecase.model;
 
 import com.ys.notification.domain.NotificationType;
 import com.ys.notification.domain.ReceiverType;

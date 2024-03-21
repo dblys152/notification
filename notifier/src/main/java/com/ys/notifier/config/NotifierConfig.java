@@ -1,8 +1,8 @@
-package com.ys.notification.application.config;
+package com.ys.notifier.config;
 
-import com.ys.notification.domain.command.notifier.CoolSmsNotifier;
-import com.ys.notification.domain.command.notifier.DefaultNotifierFinder;
-import com.ys.notification.domain.command.notifier.EmailNotifier;
+import com.ys.notifier.domain.CoolSmsNotifier;
+import com.ys.notifier.domain.DefaultNotifierFinder;
+import com.ys.notifier.domain.EmailNotifier;
 import net.nurigo.sdk.NurigoApp;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

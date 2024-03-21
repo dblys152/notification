@@ -1,4 +1,4 @@
-package com.ys.notification.application.service;
+package com.ys.notifier.application.service;
 
 import com.ys.notification.application.port.in.SendReservedNotificationsUseCase;
 import com.ys.notification.application.port.out.LoadNotificationPort;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SendReservedNotificationsService implements SendReservedNotificationsUseCase {
+public class SendNotificationsService implements SendReservedNotificationsUseCase {
     private final RecordNotificationPort recordNotificationPort;
     private final LoadNotificationPort loadNotificationPort;
     private final DefaultNotifierFinder defaultNotifierFinder;

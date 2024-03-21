@@ -1,4 +1,4 @@
-package com.ys.notification.application.port.in;
+package com.ys.notification.application.usecase;
 
 import com.ys.notification.domain.CreateNotificationCommand;
 import com.ys.notification.domain.Notification;

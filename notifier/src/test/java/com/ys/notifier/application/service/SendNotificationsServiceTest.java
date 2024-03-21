@@ -1,13 +1,8 @@
-package com.ys.notification.application.service;
+package com.ys.notifier.application.service;
 
-import com.ys.notification.application.port.out.LoadNotificationPort;
-import com.ys.notification.application.port.out.RecordNotificationPort;
 import com.ys.notification.domain.Notification;
 import com.ys.notification.domain.NotificationStatus;
 import com.ys.notification.domain.Notifications;
-import com.ys.notification.domain.command.notifier.DefaultNotifierFinder;
-import com.ys.notification.domain.command.notifier.EmailNotifier;
-import com.ys.notification.domain.command.notifier.Notifier;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,9 +21,9 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SendReservedNotificationsServiceTest {
+class SendNotificationsServiceTest {
     @InjectMocks
-    private SendReservedNotificationsService sut;
+    private SendNotificationsService sut;
 
     @Mock
     private RecordNotificationPort recordNotificationPort;
