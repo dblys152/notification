@@ -43,7 +43,7 @@ public class NotificationCommandService implements ReserveNotificationUseCase, C
 
     @Override
     public Notifications processSendingResults(List<ProcessSendingResultCommand> commandList) {
-        Notifications notifications = loadNotificationPort.findAllByIds(commandList.stream()
+        Notifications notifications = loadNotificationPort.findAllById(commandList.stream()
                 .map(c -> c.getNotificationId())
                 .toList());
         if (notifications.isEmpty()) {

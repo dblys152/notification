@@ -67,7 +67,7 @@ class NotificationCommandServiceTest {
         List<ProcessSendingResultCommand> commandList = List.of(getProcessSendingResultCommand(NOTIFICATION_ID), getProcessSendingResultCommand(NOTIFICATION_ID2));
         List<NotificationId> commandIds = List.of(NOTIFICATION_ID, NOTIFICATION_ID2);
         Notifications notifications = mock(Notifications.class);
-        given(loadNotificationPort.findAllByIds(commandIds)).willReturn(notifications);
+        given(loadNotificationPort.findAllById(commandIds)).willReturn(notifications);
 
         Notifications processedNotifications = mock(Notifications.class);
         when(notifications.processSendingResults(commandList)).thenReturn(processedNotifications);
@@ -76,7 +76,7 @@ class NotificationCommandServiceTest {
 
         assertAll(
                 () -> assertThat(actual).isNotNull(),
-                () -> then(loadNotificationPort).should().findAllByIds(commandIds),
+                () -> then(loadNotificationPort).should().findAllById(commandIds),
                 () -> then(notifications).should().processSendingResults(commandList),
                 () -> then(recordNotificationPort).should().saveAll(processedNotifications)
         );
