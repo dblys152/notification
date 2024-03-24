@@ -5,6 +5,6 @@ import com.ys.notification.domain.ProcessSendingResultCommand;
 
 import java.util.List;
 
-public interface ProcessSendingResultsUseCase {
+public interface ProcessSendingResultBulkUseCase {
     Notifications processSendingResults(List<ProcessSendingResultCommand> commandList);
 }

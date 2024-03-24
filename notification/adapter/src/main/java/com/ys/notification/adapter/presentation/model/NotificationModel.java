@@ -1,4 +1,4 @@
-package com.ys.notification.adapter.presentation;
+package com.ys.notification.adapter.presentation.model;
 
 import com.ys.notification.domain.*;
 import lombok.AllArgsConstructor;

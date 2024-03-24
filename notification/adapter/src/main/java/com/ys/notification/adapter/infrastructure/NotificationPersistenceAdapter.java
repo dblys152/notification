@@ -3,11 +3,13 @@ package com.ys.notification.adapter.infrastructure;
 import com.ys.notification.adapter.infrastructure.persistence.NotificationEntity;
 import com.ys.notification.adapter.infrastructure.persistence.NotificationRepository;
 import com.ys.notification.domain.*;
+import com.ys.shared.exception.ExceptionMessages;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Component
 @RequiredArgsConstructor
@@ -28,6 +30,13 @@ public class NotificationPersistenceAdapter implements RecordNotificationPort, L
         return Notifications.of(entityList.stream()
                 .map(NotificationEntity::toDomain)
                 .toList());
+    }
+
+    @Override
+    public Notification findById(NotificationId notificationId) {
+        NotificationEntity entity = repository.findById(notificationId.get())
+                .orElseThrow(() -> new NoSuchElementException(ExceptionMessages.NO_DATA_MESSAGE));
+        return entity.toDomain();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.ys.notification.adapter.presentation;
 
+import com.ys.notification.adapter.presentation.model.NotificationModel;
 import com.ys.notification.application.usecase.ChangeReservedToWaitingUseCase;
 import com.ys.notification.application.usecase.ReserveNotificationUseCase;
 import com.ys.notification.application.usecase.model.ReserveNotificationRequest;

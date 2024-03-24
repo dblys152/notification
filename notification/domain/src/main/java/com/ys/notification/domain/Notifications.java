@@ -1,8 +1,12 @@
 package com.ys.notification.domain;
 
+import com.ys.notification.domain.event.NotificationBulkEvent;
+import com.ys.notification.domain.event.NotificationEventType;
+import com.ys.shared.event.DomainEventPublisher;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -48,5 +52,24 @@ public class Notifications {
                         Function.identity(),
                         (existing, replacement) -> existing
                 ));
+    }
+    
+    public void eventPublish(DomainEventPublisher<NotificationBulkEvent> domainEventPublisher) {
+        filterAndEventPublish(NotificationEventType.WAIT_EMAIL_NOTIFICATION_BULK_EVENT, NotificationType.EMAIL, domainEventPublisher);
+        filterAndEventPublish( NotificationEventType.WAIT_SMS_NOTIFICATION_BULK_EVENT, NotificationType.COOL_SMS,domainEventPublisher);
+    }
+
+    private void filterAndEventPublish(NotificationEventType eventType, NotificationType type, DomainEventPublisher<NotificationBulkEvent> domainEventPublisher) {
+        Notifications filteredNotifications = filterByType(type);
+        if (!filteredNotifications.isEmpty()) {
+            NotificationBulkEvent payload = NotificationBulkEvent.fromDomain(filteredNotifications);
+            domainEventPublisher.publish(eventType.name(), payload, LocalDateTime.now());
+        }
+    }
+
+    private Notifications filterByType(NotificationType type) {
+        return new Notifications(this.items.stream()
+                .filter(notification -> notification.getType().equals(type))
+                .toList());
     }
 }

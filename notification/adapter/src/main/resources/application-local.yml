@@ -1,0 +1,61 @@
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+
+spring:
+  cloud:
+    inetutils:
+      ignored-interfaces: eth1*
+      preferred-networks: 192.168
+  datasource:
+    url: jdbc:h2:mem:notification_test_db;DATABASE_TO_UPPER=false
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      schema-locations: classpath*:schema/create.sql
+      #data-locations: classpath*:schema/insert.sql
+      encoding: UTF-8
+      mode: always
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  rabbitmq:
+    host: localhost:5672
+    username: ysrabbit
+    password: ysrabbit
+    publisher-confirm-type: CORRELATED
+
+rabbitmq:
+  queue:
+    send-email-notifier: q.send-email-notifier
+    send-sms-notifier: q.send-sms-notifier
+    dead-letter-notifier: q.dead-letter-notifier
+    process-notification-sending-result: q.process-notification-sending-result
+    dead-letter-notification: q.dead-letter-notification
+  exchange:
+    notification:
+      name: x.notification-topic
+      email-routing-key: wait-email
+      sms-routing-key: wait-sms
+    notifier:
+      name: x.notifier-topic
+      default-routing-key: succeed-notifier
+    dead-letter:
+      name: x.dead-letter-topic
+      notification-routing-key: failed-notification
+      notifier-routing-key: failed-notifier
+
+api-key:
+  header: X-API-Key
+  value:
+    notification: ${NOTIFICATION_API_KEY}

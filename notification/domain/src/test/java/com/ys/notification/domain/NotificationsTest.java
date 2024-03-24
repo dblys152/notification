@@ -1,13 +1,15 @@
 package com.ys.notification.domain;
 
+import com.ys.notification.domain.event.NotificationBulkEvent;
 import com.ys.notification.domain.fixture.SupportNotificationFixture;
+import com.ys.shared.event.DomainEventPublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 class NotificationsTest extends SupportNotificationFixture {
     private Notifications reservedNotifications;
@@ -19,6 +21,7 @@ class NotificationsTest extends SupportNotificationFixture {
                 getNotificationByStatus(NOTIFICATION_ID, NotificationStatus.RESERVED), getNotificationByStatus(NOTIFICATION_ID2, NotificationStatus.RESERVED)));
         waitingNotifications = Notifications.of(List.of(
                 getNotificationByStatus(NOTIFICATION_ID, NotificationStatus.WAITING), getNotificationByStatus(NOTIFICATION_ID2, NotificationStatus.WAITING)));
+
     }
 
     @Test
@@ -50,5 +53,12 @@ class NotificationsTest extends SupportNotificationFixture {
         Notifications actual = reservedNotifications.processSendingResults(commandList);
 
         assertThat(actual.isEmpty()).isTrue();
+    }
+
+    @Test
+    void 타입별_이벤트를_발행한다() {
+        DomainEventPublisher<NotificationBulkEvent> domainEventPublisher = mock(DomainEventPublisher.class);
+
+        waitingNotifications.eventPublish(domainEventPublisher);
     }
 }

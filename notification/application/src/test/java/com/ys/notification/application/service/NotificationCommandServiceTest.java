@@ -1,6 +1,8 @@
 package com.ys.notification.application.service;
 
 import com.ys.notification.domain.*;
+import com.ys.notification.domain.event.NotificationBulkEvent;
+import com.ys.shared.event.DomainEventPublisher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,6 +33,8 @@ class NotificationCommandServiceTest {
     private RecordNotificationPort recordNotificationPort;
     @Mock
     private LoadNotificationPort loadNotificationPort;
+    @Mock
+    private DomainEventPublisher<NotificationBulkEvent> domainEventPublisher;
 
     @Test
     void 알림을_예약한다() {
@@ -51,20 +55,40 @@ class NotificationCommandServiceTest {
         given(loadNotificationPort.findAllByStatusAndSentAtLessThanEqual(eq(NotificationStatus.RESERVED), any(LocalDateTime.class)))
                 .willReturn(reservedNotifications);
 
-        when(recordNotificationPort.saveAll(reservedNotifications)).thenReturn(mock(Notifications.class));
+        Notifications savedNotifications = mock(Notifications.class);
+        when(recordNotificationPort.saveAll(reservedNotifications)).thenReturn(savedNotifications);
         Notifications actual = sut.changeReservedToWaiting();
 
         assertAll(
                 () -> assertThat(actual).isNotNull(),
                 () -> then(loadNotificationPort).should().findAllByStatusAndSentAtLessThanEqual(eq(NotificationStatus.RESERVED), any(LocalDateTime.class)),
                 () -> then(reservedNotifications).should().toWaiting(),
-                () -> then(recordNotificationPort).should().saveAll(reservedNotifications)
+                () -> then(recordNotificationPort).should().saveAll(reservedNotifications),
+                () -> then(savedNotifications).should().eventPublish(domainEventPublisher)
         );
     }
 
     @Test
     void 전송_결과를_처리한다() {
-        List<ProcessSendingResultCommand> commandList = List.of(getProcessSendingResultCommand(NOTIFICATION_ID), getProcessSendingResultCommand(NOTIFICATION_ID2));
+        ProcessSendingResultCommand command = getProcessSendingResultCommand(NOTIFICATION_ID, NotificationStatus.SUCCEEDED);
+        Notification notification = mock(Notification.class);
+        given(loadNotificationPort.findById(NOTIFICATION_ID)).willReturn(notification);
+
+        when(recordNotificationPort.save(notification)).thenReturn(mock(Notification.class));
+        Notification actual = sut.processSendingResult(command);
+
+        assertAll(
+                () -> assertThat(actual).isNotNull(),
+                () -> then(loadNotificationPort).should().findById(NOTIFICATION_ID),
+                () -> then(notification).should().succeed(),
+                () -> then(recordNotificationPort).should().save(notification)
+        );
+    }
+
+    @Test
+    void 전송_결과를_일괄_처리한다() {
+        List<ProcessSendingResultCommand> commandList = List.of(
+                getProcessSendingResultCommand(NOTIFICATION_ID, NotificationStatus.SUCCEEDED), getProcessSendingResultCommand(NOTIFICATION_ID2, NotificationStatus.FAILED));
         List<NotificationId> commandIds = List.of(NOTIFICATION_ID, NOTIFICATION_ID2);
         Notifications notifications = mock(Notifications.class);
         given(loadNotificationPort.findAllById(commandIds)).willReturn(notifications);
@@ -82,7 +106,7 @@ class NotificationCommandServiceTest {
         );
     }
 
-    private ProcessSendingResultCommand getProcessSendingResultCommand(NotificationId notificationId) {
-        return new ProcessSendingResultCommand(notificationId, NotificationStatus.SUCCEEDED);
+    private ProcessSendingResultCommand getProcessSendingResultCommand(NotificationId notificationId, NotificationStatus status) {
+        return new ProcessSendingResultCommand(notificationId, status);
     }
 }

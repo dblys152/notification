@@ -1,9 +1,12 @@
 package com.ys.notification.application.service;
 
 import com.ys.notification.application.usecase.ChangeReservedToWaitingUseCase;
-import com.ys.notification.application.usecase.ProcessSendingResultsUseCase;
+import com.ys.notification.application.usecase.ProcessSendingResultBulkUseCase;
+import com.ys.notification.application.usecase.ProcessSendingResultUseCase;
 import com.ys.notification.application.usecase.ReserveNotificationUseCase;
 import com.ys.notification.domain.*;
+import com.ys.notification.domain.event.NotificationBulkEvent;
+import com.ys.shared.event.DomainEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +17,10 @@ import java.util.List;
 @Transactional
 @Service
 @RequiredArgsConstructor
-public class NotificationCommandService implements ReserveNotificationUseCase, ChangeReservedToWaitingUseCase, ProcessSendingResultsUseCase {
-    private RecordNotificationPort recordNotificationPort;
-    private LoadNotificationPort loadNotificationPort;
+public class NotificationCommandService implements ReserveNotificationUseCase, ChangeReservedToWaitingUseCase, ProcessSendingResultUseCase, ProcessSendingResultBulkUseCase {
+    private final RecordNotificationPort recordNotificationPort;
+    private final LoadNotificationPort loadNotificationPort;
+    private final DomainEventPublisher<NotificationBulkEvent> domainEventPublisher;
 
     @Override
     public Notification reserve(CreateNotificationCommand command) {
@@ -38,7 +42,22 @@ public class NotificationCommandService implements ReserveNotificationUseCase, C
         reservedNotifications.toWaiting();
         Notifications savedNotifications = recordNotificationPort.saveAll(reservedNotifications);
 
+        savedNotifications.eventPublish(domainEventPublisher);
+
         return savedNotifications;
+    }
+
+    @Override
+    public Notification processSendingResult(ProcessSendingResultCommand command) {
+        Notification notification = loadNotificationPort.findById(command.getNotificationId());
+
+        switch (command.getStatus()) {
+            case SUCCEEDED -> notification.succeed();
+            case FAILED -> notification.fail();
+        }
+        Notification savedNotification = recordNotificationPort.save(notification);
+
+        return savedNotification;
     }
 
     @Override
