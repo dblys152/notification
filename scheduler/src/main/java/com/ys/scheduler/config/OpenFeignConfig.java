@@ -1,4 +1,4 @@
-package com.ys.notification.scheduler.config;
+package com.ys.scheduler.config;
 
 import feign.okhttp.OkHttpClient;
 import org.springframework.cloud.openfeign.FeignClientProperties;

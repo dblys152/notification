@@ -1,4 +1,4 @@
-package com.ys.notification.scheduler;
+package com.ys.scheduler;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @EnableFeignClients
 @EnableScheduling
-@ComponentScan(basePackages = "com.ys.notification.scheduler")
+@ComponentScan(basePackages = "com.ys.scheduler")
 @RestController
 public class SchedulerApplication {
 

@@ -35,6 +35,11 @@ spring:
     password: ysrabbit
     publisher-confirm-type: CORRELATED
 
+api-key:
+  header: X-API-Key
+  value:
+    notification: eXMtbm90aWZpY2F0aW9uLWFwaS1rZXkK
+
 rabbitmq:
   queue:
     send-email-notifier: q.send-email-notifier
@@ -54,8 +59,3 @@ rabbitmq:
       name: x.dead-letter-topic
       notification-routing-key: failed-notification
       notifier-routing-key: failed-notifier
-
-api-key:
-  header: X-API-Key
-  value:
-    notification: ${NOTIFICATION_API_KEY}

@@ -1,4 +1,4 @@
-package com.ys.notification.scheduler.config;
+package com.ys.scheduler.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;

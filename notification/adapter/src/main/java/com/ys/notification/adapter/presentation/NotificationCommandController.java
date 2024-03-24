@@ -31,7 +31,7 @@ public class NotificationCommandController {
     private final ReserveNotificationUseCase reserveNotificationUseCase;
     private final ChangeReservedToWaitingUseCase changeReservedToWaitingUseCase;
 
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<ApiResponseModel<NotificationModel>> reserve(@RequestBody @Valid ReserveNotificationRequest request) {
         CreateNotificationCommand command = createNotificationCommandFactory.create(request);
 

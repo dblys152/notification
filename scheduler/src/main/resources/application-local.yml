@@ -9,3 +9,11 @@ spring:
       preferred-networks: 192.168
 
 base-host: http://localhost:8090
+
+api-key:
+  header: X-API-Key
+  value:
+    notification: eXMtbm90aWZpY2F0aW9uLWFwaS1rZXkK
+
+endpoint:
+  notification: /api/notifications

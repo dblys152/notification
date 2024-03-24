@@ -12,10 +12,12 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-logging:3.1.5'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
     implementation 'io.github.openfeign:feign-okhttp:12.5'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
 jar {

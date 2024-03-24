@@ -1,4 +1,4 @@
-package com.ys.notification.scheduler.exception;
+package com.ys.scheduler.exception;
 
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
