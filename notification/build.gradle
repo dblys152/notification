@@ -62,8 +62,6 @@ configure(springBootProjects) {
         runtimeOnly 'com.h2database:h2'
 
         testImplementation "org.springframework.boot:spring-boot-starter-test"
-        testImplementation "org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.2"
-        testImplementation 'com.github.tomakehurst:wiremock-standalone:2.27.2'
     }
 }
 

@@ -30,7 +30,7 @@ spring:
       enabled: true
       path: /h2-console
   rabbitmq:
-    host: localhost:5672
+    host: localhost
     username: ysrabbit
     password: ysrabbit
     publisher-confirm-type: CORRELATED
