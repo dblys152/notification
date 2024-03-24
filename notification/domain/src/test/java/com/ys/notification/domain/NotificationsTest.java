@@ -59,6 +59,6 @@ class NotificationsTest extends SupportNotificationFixture {
     void 타입별_이벤트를_발행한다() {
         DomainEventPublisher<NotificationBulkEvent> domainEventPublisher = mock(DomainEventPublisher.class);
 
-        waitingNotifications.eventPublish(domainEventPublisher);
+        waitingNotifications.publishEvent(domainEventPublisher);
     }
 }

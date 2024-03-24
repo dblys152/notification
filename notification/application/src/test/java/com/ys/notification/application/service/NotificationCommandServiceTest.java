@@ -64,7 +64,7 @@ class NotificationCommandServiceTest {
                 () -> then(loadNotificationPort).should().findAllByStatusAndSentAtLessThanEqual(eq(NotificationStatus.RESERVED), any(LocalDateTime.class)),
                 () -> then(reservedNotifications).should().toWaiting(),
                 () -> then(recordNotificationPort).should().saveAll(reservedNotifications),
-                () -> then(savedNotifications).should().eventPublish(domainEventPublisher)
+                () -> then(savedNotifications).should().publishEvent(domainEventPublisher)
         );
     }
 

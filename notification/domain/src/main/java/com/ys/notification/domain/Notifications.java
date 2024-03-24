@@ -54,12 +54,12 @@ public class Notifications {
                 ));
     }
     
-    public void eventPublish(DomainEventPublisher<NotificationBulkEvent> domainEventPublisher) {
-        filterAndEventPublish(NotificationEventType.WAIT_EMAIL_NOTIFICATION_BULK_EVENT, NotificationType.EMAIL, domainEventPublisher);
-        filterAndEventPublish( NotificationEventType.WAIT_SMS_NOTIFICATION_BULK_EVENT, NotificationType.COOL_SMS,domainEventPublisher);
+    public void publishEvent(DomainEventPublisher<NotificationBulkEvent> domainEventPublisher) {
+        filterAndPublishEvent(NotificationEventType.WAIT_EMAIL_NOTIFICATION_BULK_EVENT, NotificationType.EMAIL, domainEventPublisher);
+        filterAndPublishEvent( NotificationEventType.WAIT_SMS_NOTIFICATION_BULK_EVENT, NotificationType.COOL_SMS,domainEventPublisher);
     }
 
-    private void filterAndEventPublish(NotificationEventType eventType, NotificationType type, DomainEventPublisher<NotificationBulkEvent> domainEventPublisher) {
+    private void filterAndPublishEvent(NotificationEventType eventType, NotificationType type, DomainEventPublisher<NotificationBulkEvent> domainEventPublisher) {
         Notifications filteredNotifications = filterByType(type);
         if (!filteredNotifications.isEmpty()) {
             NotificationBulkEvent payload = NotificationBulkEvent.fromDomain(filteredNotifications);

@@ -42,7 +42,7 @@ public class NotificationCommandService implements ReserveNotificationUseCase, C
         reservedNotifications.toWaiting();
         Notifications savedNotifications = recordNotificationPort.saveAll(reservedNotifications);
 
-        savedNotifications.eventPublish(domainEventPublisher);
+        savedNotifications.publishEvent(domainEventPublisher);
 
         return savedNotifications;
     }
