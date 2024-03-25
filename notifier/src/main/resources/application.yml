@@ -5,4 +5,4 @@ spring:
   application:
     name: notifier
   profiles:
-    active: dev
+    active: local

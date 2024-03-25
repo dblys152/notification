@@ -1,0 +1,58 @@
+logging:
+  level:
+    root: INFO
+
+spring:
+  cloud:
+    inetutils:
+      ignored-interfaces: eth1*
+      preferred-networks: 192.168
+  rabbitmq:
+    host: localhost
+    username: ysrabbit
+    password: ysrabbit
+    publisher-confirm-type: CORRELATED
+  mail:
+    host: ${AWS_SMTP_HOST}
+    port: ${AWS_SMTP_PORT}
+    username: ${AWS_SMTP_USERNAME}
+    password: ${AWS_SMTP_PASSWORD}
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+aws-mail:
+  from: ${AWS_MAIL_FROM}
+
+cool-sms:
+  key: ${COOL_SMS_KEY}
+  secret: ${COOL_SMS_SECRET}
+  uri: https://api.coolsms.co.kr
+  from: ${COOL_SMS_FROM}
+
+test-to-mail: ${TEST_TO_MAIL}
+test-to-mobile: ${TEST_TO_MOBILE}
+
+rabbitmq:
+  queue:
+    send-email-notifier: q.send-email-notifier
+    send-sms-notifier: q.send-sms-notifier
+    dead-letter-notifier: q.dead-letter-notifier
+    process-notification-sending-result: q.process-notification-sending-result
+    dead-letter-notification: q.dead-letter-notification
+  exchange:
+    notification:
+      name: x.notification-topic
+      email-routing-key: wait-email
+      sms-routing-key: wait-sms
+    notifier:
+      name: x.notifier-topic
+      default-routing-key: succeed-notifier
+    dead-letter:
+      name: x.dead-letter-topic
+      notification-routing-key: failed-notification
+      notifier-routing-key: failed-notifier

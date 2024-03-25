@@ -11,9 +11,26 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
+    implementation project(":notification:domain")
+    implementation 'com.github.dblys152:shared:1.0.7'
+
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-logging:3.1.5'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'net.nurigo:sdk:4.2.7'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+    implementation 'org.hibernate:hibernate-validator:7.0.5.Final'
+    implementation 'org.glassfish:jakarta.el:4.0.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
+    implementation 'com.github.f4b6a3:tsid-creator:5.2.6'
+    implementation 'org.apache.commons:commons-lang3:3.13.0'
+    implementation 'commons-validator:commons-validator:1.7'
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
 jar {
