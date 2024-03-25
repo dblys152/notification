@@ -1,20 +1,18 @@
 package com.ys.notifier.domain;
 
-import com.ys.notification.domain.entity.Notification;
-
 import java.util.List;
 
-public class DefaultNotifierFinder implements NotifierFinder {
-    private final List<Notifier> candidates;
+public class DefaultNotifierFinder implements NotifierFinder<ExecuteNotifierCommand, NotifierResult> {
+    private final List<Notifier<ExecuteNotifierCommand, NotifierResult>> candidates;
 
-    public DefaultNotifierFinder(List<Notifier> candidates) {
+    public DefaultNotifierFinder(List<Notifier<ExecuteNotifierCommand, NotifierResult>> candidates) {
         this.candidates = candidates;
     }
 
     @Override
-    public Notifier getNotifier(Notification notification) {
+    public Notifier<ExecuteNotifierCommand, NotifierResult> getNotifier(ExecuteNotifierCommand factor) {
         return candidates.stream()
-                .filter(p -> p.support(notification))
+                .filter(p -> p.support(factor))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }

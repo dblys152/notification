@@ -1,12 +1,14 @@
 package com.ys.notifier.domain;
 
-import com.ys.notification.domain.entity.Notification;
-import com.ys.notification.domain.entity.NotificationType;
+import com.ys.notification.domain.NotificationType;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
+@Slf4j
 public class EmailNotifier extends AbstractNotifier {
     private final String from;
     private final JavaMailSender mailSender;
@@ -20,23 +22,27 @@ public class EmailNotifier extends AbstractNotifier {
     }
 
     @Override
-    protected void _execute(Notification notification) {
+    protected NotifierResult _execute(ExecuteNotifierCommand factor) {
         MimeMessage message = mailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            String destination = notification.getDestination().getValue();
+            String destination = factor.getDestination().getValue();
             if (isTestProfile()) {
                 destination = testToMail;
             }
             helper.setFrom(from);
             helper.setTo(destination);
-            helper.setSubject(notification.getTitle());
-            helper.setText(notification.getContents(), true);
+            helper.setSubject(factor.getTitle());
+            helper.setText(factor.getContents(), true);
 
             mailSender.send(message);
-        } catch (MessagingException ex) {
-            throw new IllegalStateException(ex.getMessage());
+
+            return DefaultNotifierResult.success(factor.getNotificationId());
+        } catch (MessagingException | MailException ex) {
+            log.error(ex.getMessage());
+
+            return DefaultNotifierResult.fail(factor.getNotificationId());
         }
     }
 }

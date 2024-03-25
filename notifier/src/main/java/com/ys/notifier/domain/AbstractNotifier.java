@@ -1,9 +1,8 @@
 package com.ys.notifier.domain;
 
-import com.ys.notification.domain.entity.Notification;
-import com.ys.notification.domain.entity.NotificationType;
+import com.ys.notification.domain.NotificationType;
 
-public abstract class AbstractNotifier implements Notifier {
+public abstract class AbstractNotifier implements Notifier<ExecuteNotifierCommand, NotifierResult> {
     private NotificationType type;
     private String activeProfile;
 
@@ -13,16 +12,16 @@ public abstract class AbstractNotifier implements Notifier {
     }
 
     @Override
-    public boolean support(Notification notification) {
-        return this.type.equals(notification.getType());
+    public boolean support(ExecuteNotifierCommand factor) {
+        return this.type.equals(factor.getType());
     }
 
     @Override
-    public void execute(Notification notification) {
-        _execute(notification);
+    public NotifierResult execute(ExecuteNotifierCommand factor) {
+        return _execute(factor);
     }
 
-    protected abstract void _execute(Notification notification);
+    protected abstract NotifierResult _execute(ExecuteNotifierCommand factor);
 
     protected boolean isTestProfile() {
         return this.activeProfile.equals("dev") || this.activeProfile.equals("test");

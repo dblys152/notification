@@ -1,7 +1,5 @@
 package com.ys.notifier.domain;
 
-import com.ys.notification.domain.entity.Notification;
-
-public interface NotifierFinder {
-    Notifier getNotifier(Notification notification);
+public interface NotifierFinder<FACTOR, RESULT> {
+    Notifier<FACTOR, RESULT> getNotifier(FACTOR factor);
 }
